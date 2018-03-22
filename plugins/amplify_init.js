@@ -13,6 +13,6 @@
 
 import Amplify, { Auth, Logger } from 'aws-amplify'
 import aws_exports from './aws-exports'
-export default async ({ store }) => {
+export default async () => {
     Auth.configure(aws_exports)
 }

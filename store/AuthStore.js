@@ -11,7 +11,7 @@ export const mutations = {
     SET_USER(state, user) {
         state.user = user
         let token = get_token_from_user(user)
-        Cookie.set('tokens', token ? token: null)
+        Cookie.set('tokens', token)
     },
     SET_VERIFICATION(state, verification) {
         state.userVerification.push(verification)
