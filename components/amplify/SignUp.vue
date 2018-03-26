@@ -41,7 +41,7 @@
 import { Auth, Logger } from 'aws-amplify'
 import AmplifyTheme from './AmplifyTheme'
 
-const logger = new Logger('SignUpComp');
+const logger = new Logger('SignUpComp')
 
 export default {
   name: 'SignUp',
@@ -55,25 +55,24 @@ export default {
     }
   },
   methods: {
-    signUp: function(event) {
-        Auth.signUp(this.username, this.password, this.email)
-            .then(data => {
-                logger.debug('sign up success', data);
-                this.$router.push('/Auth/ConfirmSignUp');
-            })
-            .catch(err => {
-              this.setError(err)
-              this.fireAuthNotify(this.error)
-            })
+    async signUp (event) {
+      try {
+        const data = await Auth.signUp(this.username, this.password, this.email)
+        logger.debug('sign up success', data)
+        this.$router.push('/Auth/ConfirmSignUp')
+      } catch (err) {
+        this.setError(err)
+        this.fireAuthNotify(this.error)
+      }
     },
-    signIn: function() {
-        this.$router.push('/Auth/SignIn');
+    signIn () {
+      this.$router.push('/Auth/SignIn')
     },
-    confirm: function() {
-        this.$router.push('/Auth/ConfirmSignUp');
+    confirm () {
+      this.$router.push('/Auth/ConfirmSignUp')
     },
-    setError(err) {
-        this.error = err.message || err;
+    setError (err) {
+      this.error = err.message || err
     }
   }
 }

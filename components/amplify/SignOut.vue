@@ -21,31 +21,32 @@
 </template>
 
 <script>
-import { Auth, Logger, JS } from 'aws-amplify'
+import { Auth } from 'aws-amplify'
 import AmplifyTheme from './AmplifyTheme'
 
 export default {
-    name: 'Logout',
-    data() {
-        return {
-            error: '',
-            theme: AmplifyTheme
-        }
-    },
-    methods: {
-        signOut(event){
-            Auth.signOut()
-                .then(data => console.log(data))
-                .catch(err => {
-                    this.setError(err)
-                    this.fireAuthNotify(this.error)
-                });
-            this.$store.dispatch('AuthStore/setUser', null)
-            this.$router.replace('/');
-        },
-        setError(err) {
-            this.error = err.message || err;
-        }
+  name: 'Logout',
+  data () {
+    return {
+      error: '',
+      theme: AmplifyTheme
     }
+  },
+  methods: {
+    async signOut (event) {
+      try {
+        const data = await Auth.signOut()
+        console.log(data)
+        this.$store.dispatch('AuthStore/setUser', null)
+        this.$router.replace('/')
+      } catch (err) {
+        this.setError(err)
+        this.fireAuthNotify(this.error)
+      }
+    },
+    setError (err) {
+      this.error = err.message || err
+    }
+  }
 }
 </script>

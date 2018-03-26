@@ -1,21 +1,21 @@
 <template>
-  <section class="container">
-    <div>
-      <app-logo/>
-      <h1 class="title">
-        aws-amplify-test
-      </h1>
-      <h2 class="subtitle">
-        AWS AMPLIFY ON Nuxt.js
-      </h2>
-      <div class="links">
-        <no-ssr><router-link v-if="!$_isAuthenticated" to="Auth/SignIn" class="button--grey">SignIn</router-link></no-ssr>
-        <no-ssr><router-link v-if="$_isAuthenticated" to="Auth/SignOut" class="button--grey">SignOut</router-link></no-ssr>
-        <no-ssr><router-link v-if="$_isAuthenticated" to="secret" class="button--green">secret</router-link></no-ssr>
-      </div>
-      <no-ssr><p>{{ $_AuthUsername }}</p></no-ssr>
+<section class="container">
+  <div>
+    <app-logo/>
+    <h1 class="title">
+      aws-amplify-test
+    </h1>
+    <h2 class="subtitle">
+      AWS AMPLIFY ON Nuxt.js
+    </h2>
+    <div class="links">
+      <no-ssr><router-link v-if="!$_isAuthenticated" to="Auth/SignIn" class="button--grey">SignIn</router-link></no-ssr>
+      <no-ssr><router-link v-if="$_isAuthenticated" to="Auth/SignOut" class="button--grey">SignOut</router-link></no-ssr>
+      <no-ssr><router-link v-if="$_isAuthenticated" to="secret" class="button--green">secret</router-link></no-ssr>
     </div>
-  </section>
+    <no-ssr><p>{{ $_AuthUsername }}</p></no-ssr>
+  </div>
+</section>
 </template>
 
 <script>

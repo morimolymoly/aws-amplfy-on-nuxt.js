@@ -11,8 +11,8 @@
  * and limitations under the License.
  */
 
-import Amplify, { Auth, Logger } from 'aws-amplify'
-import aws_exports from './aws-exports'
+import { Auth } from 'aws-amplify'
+import AWSExports from './aws-exports'
 export default async () => {
-    Auth.configure(aws_exports)
+  Auth.configure(AWSExports)
 }

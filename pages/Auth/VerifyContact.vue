@@ -7,8 +7,8 @@
 <script>
 import VerifyContact from '../../components/amplify/VerifyContact'
 export default {
-    components: {
-        VerifyContact
-    }
+  components: {
+    VerifyContact
+  }
 }
 </script>

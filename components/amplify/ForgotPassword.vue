@@ -37,48 +37,46 @@
 </template>
 
 <script>
-import { Auth, Logger } from 'aws-amplify'
+import { Auth } from 'aws-amplify'
 import AmplifyTheme from './AmplifyTheme'
 
-const logger = new Logger('ForgotPasswordComp');
-
 export default {
-    name: 'ForgotPassword',
-    data () {
-        return {
-            username: '',
-            code: '',
-            password: '',
-            error: '',
-            theme: AmplifyTheme
-        }
-    },
-    methods: {
-        send() {
-            Auth.forgotPassword(this.username)
-                .then(() => this.fireAuthNotify('code sent'))
-                .catch(err => {
-                  this.setError(err)
-                  this.fireAuthNotify(this.error)
-                });
-        },
-        submit() {
-            Auth.forgotPasswordSubmit(this.username, this.code, this.password)
-                .then(() => {
-                  this.fireAuthNotify('You got a new password')
-                  this.$router.push('/')
-                  })
-                .catch(err => {
-                  this.setError(err)
-                  this.fireAuthNotify(this.error)
-                  });
-        },
-        signIn() {
-            this.$router.push('/Auth/SignIn');
-        },
-        setError(err) {
-            this.error = err.message || err;
-        }
+  name: 'ForgotPassword',
+  data () {
+    return {
+      username: '',
+      code: '',
+      password: '',
+      error: '',
+      theme: AmplifyTheme
     }
+  },
+  methods: {
+    async send () {
+      try {
+        await Auth.forgotPassword(this.username)
+        this.fireAuthNotify('code sent')
+      } catch (err) {
+        this.setError(err)
+        this.fireAuthNotify(this.error)
+      }
+    },
+    async submit () {
+      try {
+        await Auth.forgotPasswordSubmit(this.username, this.code, this.password)
+        this.fireAuthNotify('You got a new password')
+        this.$router.push('/')
+      } catch (err) {
+        this.setError(err)
+        this.fireAuthNotify(this.error)
+      }
+    },
+    signIn () {
+      this.$router.push('/Auth/SignIn')
+    },
+    setError (err) {
+      this.error = err.message || err
+    }
+  }
 }
 </script>

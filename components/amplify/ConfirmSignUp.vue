@@ -34,44 +34,44 @@
 </template>
 
 <script>
-import { Auth, Logger } from 'aws-amplify'
+import { Auth } from 'aws-amplify'
 import AmplifyTheme from './AmplifyTheme'
 
-const logger = new Logger('ConfirmSignUpComp');
-
 export default {
-    name: 'ConfirmSignUp',
-    data () {
-        return {
-            username: '',
-            code: '',
-            error: '',
-            theme: AmplifyTheme
-        }
-    },
-    methods: {
-        confirm: function(event) {
-            Auth.confirmSignUp(this.username, this.code)
-                .then(() => this.$router.push('/'))
-                .catch(err => {
-                  this.setError(err)
-                  this.fireAuthNotify(this.error)
-                  });
-        },
-        resend: function() {
-            Auth.resendSignUp(this.username)
-                .then(() => this.fireAuthNotify('code resent'))
-                .catch(err => {
-                  this.setError(err)
-                  this.fireAuthNotify(this.error)
-                });
-        },
-        signIn: function() {
-            this.$router.push('/Auth/SignIn');
-        },
-        setError: function(err) {
-            this.error = err.message || err;
-        }
+  name: 'ConfirmSignUp',
+  data () {
+    return {
+      username: '',
+      code: '',
+      error: '',
+      theme: AmplifyTheme
     }
+  },
+  methods: {
+    async confirm (event) {
+      try {
+        await Auth.confirmSignUp(this.username, this.code)
+        this.$router.push('/')
+      } catch (err) {
+        this.setError(err)
+        this.fireAuthNotify(this.error)
+      }
+    },
+    async resend () {
+      try {
+        await Auth.resendSignUp(this.username)
+        this.fireAuthNotify('code resent')
+      } catch (err) {
+        this.setError(err)
+        this.fireAuthNotify(this.error)
+      }
+    },
+    signIn () {
+      this.$router.push('/Auth/SignIn')
+    },
+    setError (err) {
+      this.error = err.message || err
+    }
+  }
 }
 </script>

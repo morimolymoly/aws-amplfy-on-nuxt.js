@@ -7,8 +7,8 @@
 <script>
 import ConfirmSignUp from '../../components/amplify/ConfirmSignUp'
 export default {
-    components: {
-        ConfirmSignUp
-    }
+  components: {
+    ConfirmSignUp
+  }
 }
 </script>

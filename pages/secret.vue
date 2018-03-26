@@ -1,16 +1,16 @@
 <template>
-  <section class="container">
-    <div>
-      <app-logo/>
-      <h1 class="title">
-        SECRET PAGE
-      </h1>
-      <div class="links">
-        <router-link to="/" class="button--grey">home</router-link>
-      </div>
-      <no-ssr><p>{{ $_AuthUsername }}</p></no-ssr>
+<section class="container">
+  <div>
+    <app-logo/>
+    <h1 class="title">
+      SECRET PAGE
+    </h1>
+    <div class="links">
+      <router-link to="/" class="button--grey">home</router-link>
     </div>
-  </section>
+    <no-ssr><p>{{ $_AuthUsername }}</p></no-ssr>
+  </div>
+</section>
 </template>
 
 <script>

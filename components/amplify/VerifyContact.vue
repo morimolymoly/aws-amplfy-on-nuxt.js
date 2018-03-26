@@ -42,67 +42,65 @@
 </template>
 
 <script>
-import { Auth, Logger, JS } from 'aws-amplify'
+import { Auth, Logger } from 'aws-amplify'
 import AmplifyTheme from './AmplifyTheme'
 
-const logger = new Logger('SignInComp');
+const logger = new Logger('SignInComp')
 
 export default {
-    name: 'VerifyContact',
-    data () {
-        return {
-            verifyAttr: '',
+  name: 'VerifyContact',
+  data () {
+    return {
+      verifyAttr: '',
 
-            submitView: false,
-            code: '',
+      submitView: false,
+      code: '',
 
-            error: '',
-            theme: AmplifyTheme
-        }
-    },
-    computed: {
-        unverified() {
-            const verification = $_userVerification
-            return verification && verification.unverified
-                ? verification.unverified
-                : []
-        }
-    },
-    created() {
-        const verification = $_userVerification
-        if (!verification) {
-            this.$router.push('/')
-        }
-    },
-    methods: {
-        verifyEmail() { this.verifyAttr = 'email' },
-        send() {
-            Auth.verifyCurrentUserAttribute(this.verifyAttr)
-                .then(data => {
-                    logger.debug(data)
-                    this.submitView = true
-                })
-                .catch(err => {
-                    this.setError(err)
-                    this.fireAuthNotify(this.error)
-                })
-        },
-        submit() {
-            Auth.verifyCurrentUserAttributeSubmit(this.verifyAttr, this.code)
-                .then(() => {
-                    this.$router.push('/');
-                })
-                .catch(err => {
-                    this.setError(err)
-                    this.fireAuthNotify(this.error)
-                });
-        },
-        skip() {
-            this.$router.push('/');
-        },
-        setError(err) {
-            this.error = err.message || err;
-        }
+      error: '',
+      theme: AmplifyTheme
     }
+  },
+  computed: {
+    unverified () {
+      const verification = this.$_userVerification
+      return verification && verification.unverified
+        ? verification.unverified
+        : []
+    }
+  },
+  created () {
+    const verification = this.$_userVerification
+    if (!verification) {
+      this.$router.push('/')
+    }
+  },
+  methods: {
+    verifyEmail () { this.verifyAttr = 'email' },
+    async send () {
+      try {
+        const data = await Auth.verifyCurrentUserAttribute(this.verifyAttr)
+        logger.debug(data)
+        this.submitView = true
+      } catch (err) {
+        this.setError(err)
+        this.fireAuthNotify(this.error)
+      }
+    },
+    async submit () {
+      try {
+        await Auth.verifyCurrentUserAttributeSubmit(this.verifyAttr, this.code)
+        this.$router.push('/')
+      } catch (err) {
+        this.setError(err)
+        this.fireAuthNotify(this.error)
+      }
+    },
+    skip () {
+      this.$router.push('/')
+    },
+    setError (err) {
+      this.error = err.message || err
+    }
+  }
 }
 </script>

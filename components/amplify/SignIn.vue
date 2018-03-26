@@ -47,76 +47,71 @@
 </template>
 
 <script>
-import { Auth, Logger, JS } from 'aws-amplify'
+import { Auth, JS } from 'aws-amplify'
 import AmplifyTheme from './AmplifyTheme'
-const logger = new Logger('SignInLogger');
 
 export default {
-    name: 'Login',
-    data () {
-        return {
-            username: '',
-            password: '',
-            error: '',
-            user: null,
-            confirmView: false,
-            code: '',
-            theme: AmplifyTheme
-        }
-    },
-    methods: {
-        signIn (event) {
-            const that = this
-            Auth.signIn(this.username, this.password)
-                .then(user => {
-                    this.$store.dispatch('AuthStore/setUser', user)
-                    this.$router.push('/')
-                })
-                .then(user =>{
-                    that.user = user
-                    if (user.challengeName === 'SMS_MFA') {
-                        that.confirmView = true
-                        return
-                    }
-                    this.checkUser()
-                })
-                .catch(err => {
-                    this.setError(err)
-                    this.fireAuthNotify(this.error)
-                    })
-        },
-        checkUser() {
-            const user = this.user
-            if(Boolean(user)) return
-            Auth.verifiedContact(user)
-                .then(data => {
-                    this.$store.dispatch('AuthStore/setVerification', data)
-                    if (!JS.isEmpty(data.verified)) {
-                        this.$router.push('/');
-                    } else {
-                        this.$router.push('/Auth/VerifyContact');
-                    }
-                })
-        },
-        confirm() {
-            Auth.confirmSignIn(this.user, this.code)
-                .then(() => {
-                    this.$router.push('/')
-                })
-                .catch(err => {
-                    this.setError(err)
-                    this.fireAuthNotify(this.error)
-                })
-        },
-        forgot() {
-            this.$router.push('/Auth/forgotPassword')
-        },
-        signUp() {
-            this.$router.push('/Auth/SignUp');
-        },
-        setError (err) {
-            this.error = err.message || err;
-        }
+  name: 'Login',
+  data () {
+    return {
+      username: '',
+      password: '',
+      error: '',
+      user: null,
+      confirmView: false,
+      code: '',
+      theme: AmplifyTheme
     }
+  },
+  methods: {
+    async signIn (event) {
+      try {
+        const user = await Auth.signIn(this.username, this.password)
+        this.$store.dispatch('AuthStore/setUser', user)
+        this.$router.push('/')
+        if (user.challengeName === 'SMS_MFA') {
+          this.confirmView = true
+          return
+        }
+        await this.checkUser()
+      } catch (err) {
+        this.setError(err)
+        this.fireAuthNotify(this.error)
+      }
+    },
+    async checkUser () {
+      const user = this.user
+      if (user) return
+      try {
+        const data = await Auth.verifiedContact(user)
+        this.$store.dispatch('AuthStore/setVerification', data)
+        if (!JS.isEmpty(data.verified)) {
+          this.$router.push('/')
+        } else {
+          this.$router.push('/Auth/VerifyContact')
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    async confirm () {
+      try {
+        await Auth.confirmSignIn(this.user, this.code)
+        this.$router.push('/')
+      } catch (err) {
+        this.setError(err)
+        this.fireAuthNotify(this.error)
+      }
+    },
+    forgot () {
+      this.$router.push('/Auth/forgotPassword')
+    },
+    signUp () {
+      this.$router.push('/Auth/SignUp')
+    },
+    setError (err) {
+      this.error = err.message || err
+    }
+  }
 }
 </script>
